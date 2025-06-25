@@ -31,12 +31,40 @@ export async function register(req, res, next) {
 			lastName: lastName
 		}
 
-		const result = await prisma.user.create({ data: newUser })
+		// const result = await prisma.user.create({ data: newUser })
 		res.json({
 			msg: 'Register controller',
-			result: result
+			result: newUser
 		})
 	} catch (err) {
+		next(err)
+	}
+}
+
+export async function registerYup(req, res,next) {
+	console.log(req.body)
+	try {
+		const {email, mobile, firstName, lastName, password} = req.body
+		// หา user
+		if(email) {
+			let  foundUserEmail = await prisma.user.findUnique({where : {email : email}})
+			if(foundUserEmail) createError(409, `Email : ${email}  already register`)
+		}
+		if(mobile) {
+			let  foundUserMobile = await prisma.user.findUnique({where : {mobile : mobile}})
+			if(foundUserMobile) createError(409, `Mobile : ${mobile}  already register`)
+		}
+		const newUser = {
+			email,
+			mobile,
+			password: await bcrypt.hash(password, 10),
+			firstName,
+			lastName
+		}
+		const result = await prisma.user.create({data : newUser})
+		
+		res.json({msg: 'Register successful', result})
+	}catch(err) {
 		next(err)
 	}
 }
