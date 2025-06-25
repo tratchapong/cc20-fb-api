@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken'
 import prisma from '../config/prisma.config.js'
 import checkIdentity from '../utils/check-identity.util.js'
 import createError from '../utils/create-error.util.js'
+import { createUser, getUserBy } from '../services/user.service.js'
 
 export async function register(req, res, next) {
 	try {
@@ -48,11 +49,12 @@ export async function registerYup(req, res,next) {
 		const {email, mobile, firstName, lastName, password} = req.body
 		// หา user
 		if(email) {
-			let  foundUserEmail = await prisma.user.findUnique({where : {email : email}})
+			// let  foundUserEmail = await prisma.user.findUnique({where : {email : email}})
+			let  foundUserEmail = await getUserBy('email', email)
 			if(foundUserEmail) createError(409, `Email : ${email}  already register`)
 		}
 		if(mobile) {
-			let  foundUserMobile = await prisma.user.findUnique({where : {mobile : mobile}})
+			let  foundUserMobile = await getUserBy('mobile', mobile)
 			if(foundUserMobile) createError(409, `Mobile : ${mobile}  already register`)
 		}
 		const newUser = {
@@ -62,7 +64,8 @@ export async function registerYup(req, res,next) {
 			firstName,
 			lastName
 		}
-		const result = await prisma.user.create({data : newUser})
+		// const result = await prisma.user.create({data : newUser})
+		const result = await createUser(newUser)
 		
 		res.json({msg: 'Register successful', result})
 	}catch(err) {
@@ -74,9 +77,10 @@ export const login = async (req, res, next) => {
 	const {identity, password, email, mobile} = req.body
 	const identityKey = email ? 'email' : 'mobile'
 
-	const foundUser = await prisma.user.findUnique({
-		where : {[identityKey]: identity}
-	})
+	// const foundUser = await prisma.user.findUnique({
+	// 	where : {[identityKey]: identity}
+	// })
+	const foundUser = await getUserBy(identityKey, identity)
 	if(!foundUser) {
 		createError(401, 'Invalid Login')
 	}
