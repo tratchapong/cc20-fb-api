@@ -94,16 +94,15 @@ export const login = async (req, res, next) => {
 		algorithm : 'HS256',
 		expiresIn : '15d'
 	})
+	const { password : pw, createdAt, updatedAt, ...userData  } = foundUser
 
 	res.json({
 		msg: 'Login successful',
 		token: token,
+		user: userData
 	})
 }
 
 export const getMe = async (req, res, next) => {
-	let numUser = await prisma.user.count()
-	console.log(numUser)
-	createError(403, "Block!!")
-	res.json({ msg: 'Get me controller', numUser })
+	res.json({ user: req.user })
 }

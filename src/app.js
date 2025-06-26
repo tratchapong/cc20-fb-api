@@ -14,6 +14,7 @@ app.use('/api/post', (req,res)=> {
 })
 app.use('/api/comment', (req,res)=> res.send('comment service'))
 app.use('/api/like', (req,res)=> res.send('like service'))
+app.use('/api/admin', (req,res)=> res.send('like service'))
 app.use( notFoundMiddleware )
 
 app.use( errorMiddleware )
