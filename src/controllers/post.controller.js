@@ -5,7 +5,8 @@ export async function getAllPosts(req, res, next) {
 
 export async function createPost(req, res, next) {
 
-  res.json({message: "Create post"})
+  console.log(req.file)
+  res.json({message: "Create post", file: req.file})
 }
 
 export async function updatePost(req, res, next) {

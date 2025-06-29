@@ -1,7 +1,6 @@
 import dotenv from 'dotenv'
 import app from './app.js'
 import shutdown from './utils/shutdown.util.js'
-// import prisma from './config/prisma.config.js'
 
 dotenv.config()
 
