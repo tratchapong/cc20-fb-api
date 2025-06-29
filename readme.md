@@ -2,7 +2,7 @@ CC20-Fakebook-API
 ---
 ### env guide
 PORT=8899   
-DATABASE_URL=***  
+DATABASE_URL=mysql://user:password@localhost:3306/database
 JWT_SECRET=***
 
 ---

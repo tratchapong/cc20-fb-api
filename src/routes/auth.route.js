@@ -5,9 +5,7 @@ import { loginSchema, registerSchema, validate } from '../validations/validator.
 import tryCatch from '../utils/try-catch.util.js'
 import authenticate from '../middlewares/authenticate.middleware.js'
 
-
 const authRoute = express.Router()
-
 
 authRoute.post('/login', validate(loginSchema), tryCatch(authController.login))
 authRoute.post('/register', validate(registerSchema) , authController.registerYup)
