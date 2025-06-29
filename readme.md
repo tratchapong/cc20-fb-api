@@ -4,7 +4,9 @@ CC20-Fakebook-API
 PORT=8899   
 DATABASE_URL=mysql://user:password@localhost:3306/database
 JWT_SECRET=***
-
+CLOUDINARY_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_API_SECRET=
 ---
 ### service
 
