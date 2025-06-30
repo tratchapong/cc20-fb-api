@@ -1,5 +1,7 @@
+import fs from 'fs/promises'
 import path from 'path'
 import cloudinary from "../config/cloudinary.config.js"
+import prisma from '../config/prisma.config.js'
 
 export const getAllPosts = async (req,res,next) => {
 
@@ -12,16 +14,22 @@ export const createPost = async (req,res,next) => {
 	let haveFile = !!req.file
 	let uploadResult = null
 	if(haveFile) {
-		uploadResult = await cloudinary.uploader.upload(req.file.path),{
+		uploadResult = await cloudinary.uploader.upload(req.file.path,{
 			overwrite : true,
 			public_id : path.parse(req.file.path).name
-		}
+		})
+		fs.unlink(req.file.path)
 	}
-	console.log(uploadResult)
-	res.json({
-		message: 'Create post',
-		file : req.file,
-		uploadResult
+	const data = {
+		message : message,
+		image: uploadResult.secure_url,
+		userId : req.user.id
+	}
+
+	const rs = await prisma.post.create( {data})
+	res.status(201).json({
+		message: 'Create post done',
+		result : rs
 	})
 }
 
