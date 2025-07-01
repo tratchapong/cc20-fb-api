@@ -22,7 +22,7 @@ export const createPost = async (req,res,next) => {
 	}
 	const data = {
 		message : message,
-		image: uploadResult.secure_url,
+		image: uploadResult?.secure_url || '',
 		userId : req.user.id
 	}
 
