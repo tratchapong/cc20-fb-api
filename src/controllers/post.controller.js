@@ -2,6 +2,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import cloudinary from "../config/cloudinary.config.js"
 import prisma from '../config/prisma.config.js'
+import createError from '../utils/create-error.util.js'
 
 export const getAllPosts = async (req,res,next) => {
 	const resp = await prisma.post.findMany({
@@ -9,7 +10,9 @@ export const getAllPosts = async (req,res,next) => {
 		include : {
 			user : { select : {
 				firstName: true, lastName: true, profileImage:true
-			}}
+			}},
+			comments : true,
+			likes : true
 		}
 	})	
 	res.json({posts: resp})
@@ -46,6 +49,18 @@ export const updatePost = async (req, res, next) => {
 }
 
 export const deletePost = async (req, res, next) => {
+	const {id} = req.params
 
-	res.json( {message: 'Delete post'})
+	const foundPost = await prisma.post.findUnique({
+		where : { id : +id }
+	})
+	if(!foundPost) {
+		createError(400, 'post-id not found')
+	}
+	if(req.user.id !== foundPost.userId) {
+		createError(400, 'Cannot delete this post')
+	}
+	const rs = await prisma.post.delete({where : {id: +id}})
+
+	res.json( {message: 'Delete done'})
 }
