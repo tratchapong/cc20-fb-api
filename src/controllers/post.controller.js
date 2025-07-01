@@ -4,8 +4,15 @@ import cloudinary from "../config/cloudinary.config.js"
 import prisma from '../config/prisma.config.js'
 
 export const getAllPosts = async (req,res,next) => {
-
-	res.json({message: 'Get all posts'})
+	const resp = await prisma.post.findMany({
+		orderBy: { createdAt : 'desc'},
+		include : {
+			user : { select : {
+				firstName: true, lastName: true, profileImage:true
+			}}
+		}
+	})	
+	res.json({posts: resp})
 }
 
 export const createPost = async (req,res,next) => {
