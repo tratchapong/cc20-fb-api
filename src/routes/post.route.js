@@ -6,7 +6,7 @@ import upload from '../middlewares/upload.middleware.js'
 
 postRoute.get('/', postController.getAllPosts)
 postRoute.post('/',upload.single('image') , postController.createPost)
-postRoute.put('/', postController.updatePost)
+postRoute.put('/:id',upload.single('image'), postController.updatePost)
 postRoute.delete('/:id', postController.deletePost)
 
 export default postRoute
